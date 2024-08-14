@@ -1,11 +1,12 @@
-﻿using System.Drawing;
+﻿using System.Diagnostics;
+using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Windows.Forms;
 
 namespace vatACARS
 {
-    public partial class MainForm : Form
+    public partial class SettingsMenu : Form
     {
         private const int _resizeBorder = 10;
         private bool _isResizing = false;
@@ -14,34 +15,19 @@ namespace vatACARS
         private Point _resizeStartPoint;
         private Font? _semiBoldFont;
         private const int CornerRadius = 8;
-        private const int BorderWidth = 4; 
-        private Color BorderColor = Color.FromArgb(9, 9, 9); 
-        public static SettingsMenu settingsMenu;
+        private const int BorderWidth = 4;
+        private Color BorderColor = Color.FromArgb(9, 9, 9);
 
-        public MainForm()
+        public SettingsMenu()
         {
             InitializeComponent();
             LoadFont();
             this.SetStyle(ControlStyles.ResizeRedraw, true); // Redraw on resize
         }
 
-        private void MainForm_Load(object sender, EventArgs e)
+        private void SettingsMenu_Load(object sender, EventArgs e)
         {
             SetFormRegion();
-        }
-
-        public static void DoShowSettingsMenu()
-        {
-            if (settingsMenu == null || settingsMenu.IsDisposed)
-            {
-                settingsMenu = new SettingsMenu();
-            }
-            else if (settingsMenu.Visible)
-            {
-                return;
-            }
-
-            settingsMenu.Show(Form.ActiveForm);
         }
 
         private void SetFormRegion()
@@ -156,7 +142,7 @@ namespace vatACARS
             }
         }
 
-        private void MainForm_MouseDown(object sender, MouseEventArgs e)
+        private void SettingsMenu_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left && _resizeDirection != ResizeDirection.None)
             {
@@ -166,7 +152,7 @@ namespace vatACARS
             }
         }
 
-        private void MainForm_MouseMove(object sender, MouseEventArgs e)
+        private void SettingsMenu_MouseMove(object sender, MouseEventArgs e)
         {
             if (_isResizing)
             {
@@ -214,7 +200,7 @@ namespace vatACARS
             }
         }
 
-        private void MainForm_MouseUp(object sender, MouseEventArgs e)
+        private void SettingsMenu_MouseUp(object sender, MouseEventArgs e)
         {
             _isResizing = false;
             _resizeDirection = ResizeDirection.None;
@@ -247,9 +233,20 @@ namespace vatACARS
             this.Cursor = Cursors.Default;
         }
 
-        private void btn_settings_Click(object sender, EventArgs e)
+        private void tbx_token_TextChanged(object sender, EventArgs e)
         {
-            DoShowSettingsMenu();
+            if (tbx_token.Text.StartsWith("vAcV1-") && tbx_token.Text.Length == 32)
+            {
+                Properties.Settings.Default.Token = tbx_token.Text;
+                Properties.Settings.Default.Save();
+            }
         }
+
+
+        private void SettingsMenu_Shown(object sender, EventArgs e)
+        {
+            tbx_token.Text = Properties.Settings.Default.Token;
+        }
+
     }
 }
