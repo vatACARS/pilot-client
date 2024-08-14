@@ -1,4 +1,6 @@
-﻿namespace vatACARS
+﻿using vatACARSControls;
+
+namespace vatACARS
 {
     partial class SettingsMenu
     {
@@ -28,6 +30,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsMenu));
             pnl_control = new Panel();
             lbl_title = new Label();
@@ -35,6 +38,8 @@
             btnMinimize = new Button();
             tbx_token = new TextBox();
             lbl_token = new Label();
+            lbl_volume = new Label();
+            slr_volume = new Slider(components);
             pnl_control.SuspendLayout();
             SuspendLayout();
             // 
@@ -47,7 +52,7 @@
             pnl_control.Controls.Add(btnMinimize);
             pnl_control.Location = new Point(0, 0);
             pnl_control.Name = "pnl_control";
-            pnl_control.Size = new Size(323, 35);
+            pnl_control.Size = new Size(305, 35);
             pnl_control.TabIndex = 0;
             pnl_control.MouseDown += pnl_control_MouseDown;
             pnl_control.MouseMove += pnl_control_MouseMove;
@@ -78,7 +83,7 @@
             btnClose.FlatStyle = FlatStyle.Flat;
             btnClose.ForeColor = Color.White;
             btnClose.Image = (Image)resources.GetObject("btnClose.Image");
-            btnClose.Location = new Point(293, 5);
+            btnClose.Location = new Point(275, 5);
             btnClose.Name = "btnClose";
             btnClose.Size = new Size(27, 26);
             btnClose.TabIndex = 0;
@@ -96,7 +101,7 @@
             btnMinimize.FlatStyle = FlatStyle.Flat;
             btnMinimize.ForeColor = Color.White;
             btnMinimize.Image = (Image)resources.GetObject("btnMinimize.Image");
-            btnMinimize.Location = new Point(269, 5);
+            btnMinimize.Location = new Point(251, 5);
             btnMinimize.Name = "btnMinimize";
             btnMinimize.Size = new Size(27, 26);
             btnMinimize.TabIndex = 1;
@@ -109,10 +114,10 @@
             tbx_token.BackColor = Color.White;
             tbx_token.BorderStyle = BorderStyle.FixedSingle;
             tbx_token.Font = new Font("Montserrat SemiBold", 12F);
-            tbx_token.Location = new Point(80, 41);
+            tbx_token.Location = new Point(90, 41);
             tbx_token.Name = "tbx_token";
             tbx_token.PasswordChar = '*';
-            tbx_token.Size = new Size(231, 27);
+            tbx_token.Size = new Size(203, 27);
             tbx_token.TabIndex = 1;
             tbx_token.TextChanged += tbx_token_TextChanged;
             // 
@@ -122,17 +127,46 @@
             lbl_token.ForeColor = SystemColors.ButtonHighlight;
             lbl_token.Location = new Point(3, 38);
             lbl_token.Name = "lbl_token";
-            lbl_token.Size = new Size(71, 26);
+            lbl_token.Size = new Size(81, 26);
             lbl_token.TabIndex = 3;
             lbl_token.Text = "Token:";
             lbl_token.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // lbl_volume
+            // 
+            lbl_volume.Font = new Font("Montserrat SemiBold", 12F, FontStyle.Bold);
+            lbl_volume.ForeColor = SystemColors.ButtonHighlight;
+            lbl_volume.Location = new Point(3, 74);
+            lbl_volume.Name = "lbl_volume";
+            lbl_volume.Size = new Size(81, 26);
+            lbl_volume.TabIndex = 4;
+            lbl_volume.Text = "Volume:";
+            lbl_volume.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // slr_volume
+            // 
+            slr_volume.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            slr_volume.BackColor = Color.FromArgb(38, 38, 38);
+            slr_volume.CurrentValue = 100;
+            slr_volume.Font = new Font("Montserrat SemiBold", 12F, FontStyle.Bold);
+            slr_volume.ForeColor = Color.White;
+            slr_volume.Location = new Point(90, 74);
+            slr_volume.MaxValue = 100;
+            slr_volume.MinValue = 0;
+            slr_volume.Name = "slr_volume";
+            slr_volume.Size = new Size(203, 26);
+            slr_volume.TabIndex = 5;
+            slr_volume.ValueChanged += slr_volume_ValueChanged;
+            slr_volume.ValueLabelClick += slr_volume_ValueLabelClick;
             // 
             // SettingsMenu
             // 
             AutoScaleDimensions = new SizeF(8F, 16F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(38, 38, 38);
-            ClientSize = new Size(323, 401);
+            ClientSize = new Size(305, 401);
+            Controls.Add(slr_volume);
+            Controls.Add(lbl_volume);
             Controls.Add(lbl_token);
             Controls.Add(tbx_token);
             Controls.Add(pnl_control);
@@ -163,5 +197,7 @@
         private Label lbl_title;
         private TextBox tbx_token;
         private Label lbl_token;
+        private Label lbl_volume;
+        private Slider slr_volume;
     }
 }

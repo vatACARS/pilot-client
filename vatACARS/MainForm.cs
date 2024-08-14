@@ -1,22 +1,20 @@
-﻿using System.Drawing;
-using System.Drawing.Drawing2D;
+﻿using System.Drawing.Drawing2D;
 using System.Drawing.Text;
-using System.Windows.Forms;
 
 namespace vatACARS
 {
     public partial class MainForm : Form
     {
+        public static SettingsMenu settingsMenu;
         private const int _resizeBorder = 10;
+        private const int BorderWidth = 4;
+        private const int CornerRadius = 8;
         private bool _isResizing = false;
         private Point _mouseDownLocation;
         private ResizeDirection _resizeDirection = ResizeDirection.None;
         private Point _resizeStartPoint;
         private Font? _semiBoldFont;
-        private const int CornerRadius = 8;
-        private const int BorderWidth = 4; 
-        private Color BorderColor = Color.FromArgb(9, 9, 9); 
-        public static SettingsMenu settingsMenu;
+        private Color BorderColor = Color.FromArgb(9, 9, 9);
 
         public MainForm()
         {
@@ -25,9 +23,16 @@ namespace vatACARS
             this.SetStyle(ControlStyles.ResizeRedraw, true); // Redraw on resize
         }
 
-        private void MainForm_Load(object sender, EventArgs e)
+        private enum ResizeDirection
         {
-            SetFormRegion();
+            None,
+            Top,
+            Bottom,
+            Right,
+            TopLeft,
+            TopRight,
+            BottomLeft,
+            BottomRight
         }
 
         public static void DoShowSettingsMenu()
@@ -42,24 +47,6 @@ namespace vatACARS
             }
 
             settingsMenu.Show(Form.ActiveForm);
-        }
-
-        private void SetFormRegion()
-        {
-            using (var path = new GraphicsPath())
-            {
-                var rect = new Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height);
-
-                // Create rounded corners path
-                path.AddArc(0, 0, CornerRadius * 2, CornerRadius * 2, 180, 90); // Top-left corner
-                path.AddArc(rect.Width - CornerRadius * 2, 0, CornerRadius * 2, CornerRadius * 2, 270, 90); // Top-right corner
-                path.AddArc(rect.Width - CornerRadius * 2, rect.Height - CornerRadius * 2, CornerRadius * 2, CornerRadius * 2, 0, 90); // Bottom-right corner
-                path.AddArc(0, rect.Height - CornerRadius * 2, CornerRadius * 2, CornerRadius * 2, 90, 90); // Bottom-left corner
-                path.CloseAllFigures();
-
-                // Set form region to the rounded path
-                this.Region = new Region(path);
-            }
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -91,16 +78,9 @@ namespace vatACARS
             }
         }
 
-        private enum ResizeDirection
+        private void btn_settings_Click(object sender, EventArgs e)
         {
-            None,
-            Top,
-            Bottom,
-            Right,
-            TopLeft,
-            TopRight,
-            BottomLeft,
-            BottomRight
+            DoShowSettingsMenu();
         }
 
         private void btnClose_Click(object sender, EventArgs e)
@@ -154,6 +134,11 @@ namespace vatACARS
             {
                 MessageBox.Show($"An error occurred while loading the font: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            SetFormRegion();
         }
 
         private void MainForm_MouseDown(object sender, MouseEventArgs e)
@@ -247,9 +232,22 @@ namespace vatACARS
             this.Cursor = Cursors.Default;
         }
 
-        private void btn_settings_Click(object sender, EventArgs e)
+        private void SetFormRegion()
         {
-            DoShowSettingsMenu();
+            using (var path = new GraphicsPath())
+            {
+                var rect = new Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height);
+
+                // Create rounded corners path
+                path.AddArc(0, 0, CornerRadius * 2, CornerRadius * 2, 180, 90); // Top-left corner
+                path.AddArc(rect.Width - CornerRadius * 2, 0, CornerRadius * 2, CornerRadius * 2, 270, 90); // Top-right corner
+                path.AddArc(rect.Width - CornerRadius * 2, rect.Height - CornerRadius * 2, CornerRadius * 2, CornerRadius * 2, 0, 90); // Bottom-right corner
+                path.AddArc(0, rect.Height - CornerRadius * 2, CornerRadius * 2, CornerRadius * 2, 90, 90); // Bottom-left corner
+                path.CloseAllFigures();
+
+                // Set form region to the rounded path
+                this.Region = new Region(path);
+            }
         }
     }
 }

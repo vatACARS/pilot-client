@@ -1,80 +1,36 @@
-﻿using System.Diagnostics;
-using System.Drawing;
-using System.Drawing.Drawing2D;
+﻿using System.Drawing.Drawing2D;
 using System.Drawing.Text;
-using System.Windows.Forms;
 
 namespace vatACARS
 {
     public partial class SettingsMenu : Form
     {
         private const int _resizeBorder = 10;
+        private const int BorderWidth = 4;
+        private const int CornerRadius = 8;
         private bool _isResizing = false;
         private Point _mouseDownLocation;
         private ResizeDirection _resizeDirection = ResizeDirection.None;
         private Point _resizeStartPoint;
         private Font? _semiBoldFont;
-        private const int CornerRadius = 8;
-        private const int BorderWidth = 4;
         private Color BorderColor = Color.FromArgb(9, 9, 9);
+
+        private int clickCount = 0;
+
+        private int currentSoundIndex = 0;
+
+        private List<string> soundQueue = new List<string>
+        {
+            "downlink",
+            "uplink",
+            "piloterror"
+        };
 
         public SettingsMenu()
         {
             InitializeComponent();
             LoadFont();
             this.SetStyle(ControlStyles.ResizeRedraw, true); // Redraw on resize
-        }
-
-        private void SettingsMenu_Load(object sender, EventArgs e)
-        {
-            SetFormRegion();
-        }
-
-        private void SetFormRegion()
-        {
-            using (var path = new GraphicsPath())
-            {
-                var rect = new Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height);
-
-                // Create rounded corners path
-                path.AddArc(0, 0, CornerRadius * 2, CornerRadius * 2, 180, 90); // Top-left corner
-                path.AddArc(rect.Width - CornerRadius * 2, 0, CornerRadius * 2, CornerRadius * 2, 270, 90); // Top-right corner
-                path.AddArc(rect.Width - CornerRadius * 2, rect.Height - CornerRadius * 2, CornerRadius * 2, CornerRadius * 2, 0, 90); // Bottom-right corner
-                path.AddArc(0, rect.Height - CornerRadius * 2, CornerRadius * 2, CornerRadius * 2, 90, 90); // Bottom-left corner
-                path.CloseAllFigures();
-
-                // Set form region to the rounded path
-                this.Region = new Region(path);
-            }
-        }
-
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            base.OnPaint(e);
-
-            // Draw rounded corners with better quality
-            using (var path = new GraphicsPath())
-            {
-                var rect = new Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height);
-
-                // Create rounded corners path
-                path.AddArc(0, 0, CornerRadius * 2, CornerRadius * 2, 180, 90); // Top-left corner
-                path.AddArc(rect.Width - CornerRadius * 2, 0, CornerRadius * 2, CornerRadius * 2, 270, 90); // Top-right corner
-                path.AddArc(rect.Width - CornerRadius * 2, rect.Height - CornerRadius * 2, CornerRadius * 2, CornerRadius * 2, 0, 90); // Bottom-right corner
-                path.AddArc(0, rect.Height - CornerRadius * 2, CornerRadius * 2, CornerRadius * 2, 90, 90); // Bottom-left corner
-                path.CloseAllFigures();
-
-                // Smooth drawing with high-quality settings
-                e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-                e.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
-                e.Graphics.FillPath(new SolidBrush(this.BackColor), path);
-
-                // Draw border
-                using (var borderPen = new Pen(BorderColor, BorderWidth))
-                {
-                    e.Graphics.DrawPath(borderPen, path);
-                }
-            }
         }
 
         private enum ResizeDirection
@@ -87,6 +43,32 @@ namespace vatACARS
             TopRight,
             BottomLeft,
             BottomRight
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+            using (var path = new GraphicsPath())
+            {
+                var rect = new Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height);
+
+                // Create rounded corners path
+                path.AddArc(0, 0, CornerRadius * 2, CornerRadius * 2, 180, 90); // Top-left corner
+                path.AddArc(rect.Width - CornerRadius * 2, 0, CornerRadius * 2, CornerRadius * 2, 270, 90); // Top-right corner
+                path.AddArc(rect.Width - CornerRadius * 2, rect.Height - CornerRadius * 2, CornerRadius * 2, CornerRadius * 2, 0, 90); // Bottom-right corner
+                path.AddArc(0, rect.Height - CornerRadius * 2, CornerRadius * 2, CornerRadius * 2, 90, 90); // Bottom-left corner
+                path.CloseAllFigures();
+
+                e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+                e.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                e.Graphics.FillPath(new SolidBrush(this.BackColor), path);
+
+                // Draw border
+                using (var borderPen = new Pen(BorderColor, BorderWidth))
+                {
+                    e.Graphics.DrawPath(borderPen, path);
+                }
+            }
         }
 
         private void btnClose_Click(object sender, EventArgs e)
@@ -142,6 +124,72 @@ namespace vatACARS
             }
         }
 
+        private async Task PlayAllSounds()
+        {
+            // Play all sounds at once
+            foreach (var sound in soundQueue)
+            {
+                AudioInterface.playSound(sound);
+            }
+
+            await Task.Delay(10);
+        }
+
+        private async Task PlayCurrentSound()
+        {
+            string soundToPlay = soundQueue[currentSoundIndex];
+            AudioInterface.playSound(soundToPlay);
+            await Task.Delay(10);
+        }
+
+        private void pnl_control_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                _mouseDownLocation = e.Location;
+                this.Cursor = Cursors.SizeAll;
+            }
+        }
+
+        private void pnl_control_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                Point newLocation = new Point(
+                    this.Location.X + (e.X - _mouseDownLocation.X),
+                    this.Location.Y + (e.Y - _mouseDownLocation.Y)
+                );
+                this.Location = newLocation;
+            }
+        }
+
+        private void pnl_control_MouseUp(object sender, MouseEventArgs e)
+        {
+            this.Cursor = Cursors.Default;
+        }
+
+        private void SetFormRegion()
+        {
+            using (var path = new GraphicsPath())
+            {
+                var rect = new Rectangle(0, 0, this.ClientSize.Width, this.ClientSize.Height);
+
+                // Create rounded corners path
+                path.AddArc(0, 0, CornerRadius * 2, CornerRadius * 2, 180, 90); // Top-left corner
+                path.AddArc(rect.Width - CornerRadius * 2, 0, CornerRadius * 2, CornerRadius * 2, 270, 90); // Top-right corner
+                path.AddArc(rect.Width - CornerRadius * 2, rect.Height - CornerRadius * 2, CornerRadius * 2, CornerRadius * 2, 0, 90); // Bottom-right corner
+                path.AddArc(0, rect.Height - CornerRadius * 2, CornerRadius * 2, CornerRadius * 2, 90, 90); // Bottom-left corner
+                path.CloseAllFigures();
+
+                this.Region = new Region(path);
+            }
+        }
+
+        private void SettingsMenu_Load(object sender, EventArgs e)
+        {
+            SetFormRegion();
+        }
+
         private void SettingsMenu_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left && _resizeDirection != ResizeDirection.None)
@@ -187,14 +235,11 @@ namespace vatACARS
                 }
 
                 _resizeStartPoint = e.Location;
-
-                // Update the form region to maintain rounded corners
                 SetFormRegion();
-                Invalidate(); // Ensure the form is redrawn
+                Invalidate();
             }
             else
             {
-                // Determine resizing direction and update cursor
                 _resizeDirection = GetResizeDirection(e.Location);
                 this.Cursor = GetCursorForResizeDirection(_resizeDirection);
             }
@@ -207,30 +252,31 @@ namespace vatACARS
             this.Cursor = Cursors.Default;
         }
 
-        private void pnl_control_MouseDown(object sender, MouseEventArgs e)
+        private void SettingsMenu_Shown(object sender, EventArgs e)
         {
-            if (e.Button == MouseButtons.Left)
-            {
-                _mouseDownLocation = e.Location;
-                this.Cursor = Cursors.SizeAll;
-            }
+            tbx_token.Text = Properties.Settings.Default.Token;
+            slr_volume.CurrentValue = Properties.Settings.Default.Volume;
         }
 
-        private void pnl_control_MouseMove(object sender, MouseEventArgs e)
+        private void slr_volume_ValueChanged(object sender, EventArgs e)
         {
-            if (e.Button == MouseButtons.Left)
-            {
-                Point newLocation = new Point(
-                    this.Location.X + (e.X - _mouseDownLocation.X),
-                    this.Location.Y + (e.Y - _mouseDownLocation.Y)
-                );
-                this.Location = newLocation;
-            }
+            Properties.Settings.Default.Volume = slr_volume.CurrentValue;
+            Properties.Settings.Default.Save();
         }
 
-        private void pnl_control_MouseUp(object sender, MouseEventArgs e)
+        private async void slr_volume_ValueLabelClick(object sender, EventArgs e)
         {
-            this.Cursor = Cursors.Default;
+            clickCount++;
+            if (clickCount == 10) // for funny :)
+            {
+                AudioInterface.playSound("help");
+                clickCount = 0;
+            }
+            else if (soundQueue.Count > 0)
+            {
+                await PlayCurrentSound();
+                currentSoundIndex = (currentSoundIndex + 1) % soundQueue.Count;
+            }
         }
 
         private void tbx_token_TextChanged(object sender, EventArgs e)
@@ -241,12 +287,5 @@ namespace vatACARS
                 Properties.Settings.Default.Save();
             }
         }
-
-
-        private void SettingsMenu_Shown(object sender, EventArgs e)
-        {
-            tbx_token.Text = Properties.Settings.Default.Token;
-        }
-
     }
 }
