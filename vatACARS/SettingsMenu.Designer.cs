@@ -1,6 +1,6 @@
 ﻿namespace vatACARS
 {
-    partial class MainForm
+    partial class SettingsMenu
     {
         /// <summary>
         ///  Required designer variable.
@@ -28,12 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsMenu));
             pnl_control = new Panel();
-            btn_settings = new Button();
             lbl_title = new Label();
             btnClose = new Button();
             btnMinimize = new Button();
+            tbx_token = new TextBox();
+            lbl_token = new Label();
             pnl_control.SuspendLayout();
             SuspendLayout();
             // 
@@ -41,35 +42,16 @@
             // 
             pnl_control.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             pnl_control.BackColor = Color.FromArgb(9, 9, 9);
-            pnl_control.Controls.Add(btn_settings);
             pnl_control.Controls.Add(lbl_title);
             pnl_control.Controls.Add(btnClose);
             pnl_control.Controls.Add(btnMinimize);
             pnl_control.Location = new Point(0, 0);
             pnl_control.Name = "pnl_control";
-            pnl_control.Size = new Size(696, 35);
+            pnl_control.Size = new Size(323, 35);
             pnl_control.TabIndex = 0;
             pnl_control.MouseDown += pnl_control_MouseDown;
             pnl_control.MouseMove += pnl_control_MouseMove;
             pnl_control.MouseUp += pnl_control_MouseUp;
-            // 
-            // btn_settings
-            // 
-            btn_settings.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            btn_settings.Cursor = Cursors.Hand;
-            btn_settings.FlatAppearance.BorderColor = Color.FromArgb(9, 9, 9);
-            btn_settings.FlatAppearance.BorderSize = 0;
-            btn_settings.FlatAppearance.MouseDownBackColor = Color.Transparent;
-            btn_settings.FlatAppearance.MouseOverBackColor = Color.Transparent;
-            btn_settings.FlatStyle = FlatStyle.Flat;
-            btn_settings.ForeColor = Color.White;
-            btn_settings.Image = (Image)resources.GetObject("btn_settings.Image");
-            btn_settings.Location = new Point(618, 5);
-            btn_settings.Name = "btn_settings";
-            btn_settings.Size = new Size(27, 26);
-            btn_settings.TabIndex = 3;
-            btn_settings.UseVisualStyleBackColor = true;
-            btn_settings.Click += btn_settings_Click;
             // 
             // lbl_title
             // 
@@ -79,7 +61,7 @@
             lbl_title.Name = "lbl_title";
             lbl_title.Size = new Size(110, 26);
             lbl_title.TabIndex = 2;
-            lbl_title.Text = "vatACARS";
+            lbl_title.Text = "Settings";
             lbl_title.TextAlign = ContentAlignment.MiddleLeft;
             lbl_title.MouseDown += pnl_control_MouseDown;
             lbl_title.MouseMove += pnl_control_MouseMove;
@@ -96,7 +78,7 @@
             btnClose.FlatStyle = FlatStyle.Flat;
             btnClose.ForeColor = Color.White;
             btnClose.Image = (Image)resources.GetObject("btnClose.Image");
-            btnClose.Location = new Point(666, 5);
+            btnClose.Location = new Point(293, 5);
             btnClose.Name = "btnClose";
             btnClose.Size = new Size(27, 26);
             btnClose.TabIndex = 0;
@@ -114,34 +96,62 @@
             btnMinimize.FlatStyle = FlatStyle.Flat;
             btnMinimize.ForeColor = Color.White;
             btnMinimize.Image = (Image)resources.GetObject("btnMinimize.Image");
-            btnMinimize.Location = new Point(642, 5);
+            btnMinimize.Location = new Point(269, 5);
             btnMinimize.Name = "btnMinimize";
             btnMinimize.Size = new Size(27, 26);
             btnMinimize.TabIndex = 1;
             btnMinimize.UseVisualStyleBackColor = true;
             btnMinimize.Click += btnMinimize_Click;
             // 
-            // MainForm
+            // tbx_token
+            // 
+            tbx_token.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            tbx_token.BackColor = Color.White;
+            tbx_token.BorderStyle = BorderStyle.FixedSingle;
+            tbx_token.Font = new Font("Montserrat SemiBold", 12F);
+            tbx_token.Location = new Point(80, 41);
+            tbx_token.Name = "tbx_token";
+            tbx_token.PasswordChar = '*';
+            tbx_token.Size = new Size(231, 27);
+            tbx_token.TabIndex = 1;
+            tbx_token.TextChanged += tbx_token_TextChanged;
+            // 
+            // lbl_token
+            // 
+            lbl_token.Font = new Font("Montserrat SemiBold", 12F, FontStyle.Bold);
+            lbl_token.ForeColor = SystemColors.ButtonHighlight;
+            lbl_token.Location = new Point(3, 38);
+            lbl_token.Name = "lbl_token";
+            lbl_token.Size = new Size(71, 26);
+            lbl_token.TabIndex = 3;
+            lbl_token.Text = "Token:";
+            lbl_token.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // SettingsMenu
             // 
             AutoScaleDimensions = new SizeF(8F, 16F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(38, 38, 38);
-            ClientSize = new Size(696, 422);
+            ClientSize = new Size(323, 401);
+            Controls.Add(lbl_token);
+            Controls.Add(tbx_token);
             Controls.Add(pnl_control);
             Font = new Font("Montserrat SemiBold", 9F);
             FormBorderStyle = FormBorderStyle.None;
             Icon = (Icon)resources.GetObject("$this.Icon");
             MinimumSize = new Size(191, 166);
-            Name = "MainForm";
+            Name = "SettingsMenu";
             SizeGripStyle = SizeGripStyle.Show;
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "Pilot Client";
-            Load += MainForm_Load;
-            MouseDown += MainForm_MouseDown;
-            MouseMove += MainForm_MouseMove;
-            MouseUp += MainForm_MouseUp;
+            Text = "Settings";
+            Load += SettingsMenu_Load;
+            Shown += SettingsMenu_Shown;
+            MouseDown += SettingsMenu_MouseDown;
+            MouseMove += SettingsMenu_MouseMove;
+            MouseUp += SettingsMenu_MouseUp;
             pnl_control.ResumeLayout(false);
             ResumeLayout(false);
+            PerformLayout();
         }
 
         private Panel pnl_control;
@@ -151,6 +161,7 @@
         #endregion // End of Windows Form Designer generated code
 
         private Label lbl_title;
-        private Button btn_settings;
+        private TextBox tbx_token;
+        private Label lbl_token;
     }
 }
