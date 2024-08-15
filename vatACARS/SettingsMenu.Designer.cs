@@ -34,8 +34,8 @@ namespace vatACARS
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsMenu));
             pnl_control = new Panel();
             lbl_title = new Label();
-            btnClose = new Button();
-            btnMinimize = new Button();
+            btnClose = new System.Windows.Forms.Button();
+            btnMinimize = new System.Windows.Forms.Button();
             tbx_token = new TextBox();
             lbl_token = new Label();
             lbl_volume = new Label();
@@ -52,7 +52,7 @@ namespace vatACARS
             pnl_control.Controls.Add(btnMinimize);
             pnl_control.Location = new Point(0, 0);
             pnl_control.Name = "pnl_control";
-            pnl_control.Size = new Size(305, 35);
+            pnl_control.Size = new Size(331, 35);
             pnl_control.TabIndex = 0;
             pnl_control.MouseDown += pnl_control_MouseDown;
             pnl_control.MouseMove += pnl_control_MouseMove;
@@ -83,7 +83,7 @@ namespace vatACARS
             btnClose.FlatStyle = FlatStyle.Flat;
             btnClose.ForeColor = Color.White;
             btnClose.Image = (Image)resources.GetObject("btnClose.Image");
-            btnClose.Location = new Point(275, 5);
+            btnClose.Location = new Point(301, 5);
             btnClose.Name = "btnClose";
             btnClose.Size = new Size(27, 26);
             btnClose.TabIndex = 0;
@@ -101,7 +101,7 @@ namespace vatACARS
             btnMinimize.FlatStyle = FlatStyle.Flat;
             btnMinimize.ForeColor = Color.White;
             btnMinimize.Image = (Image)resources.GetObject("btnMinimize.Image");
-            btnMinimize.Location = new Point(251, 5);
+            btnMinimize.Location = new Point(277, 5);
             btnMinimize.Name = "btnMinimize";
             btnMinimize.Size = new Size(27, 26);
             btnMinimize.TabIndex = 1;
@@ -117,7 +117,7 @@ namespace vatACARS
             tbx_token.Location = new Point(90, 41);
             tbx_token.Name = "tbx_token";
             tbx_token.PasswordChar = '*';
-            tbx_token.Size = new Size(203, 27);
+            tbx_token.Size = new Size(229, 27);
             tbx_token.TabIndex = 1;
             tbx_token.TextChanged += tbx_token_TextChanged;
             // 
@@ -154,7 +154,7 @@ namespace vatACARS
             slr_volume.MaxValue = 100;
             slr_volume.MinValue = 0;
             slr_volume.Name = "slr_volume";
-            slr_volume.Size = new Size(203, 26);
+            slr_volume.Size = new Size(229, 26);
             slr_volume.TabIndex = 5;
             slr_volume.ValueChanged += slr_volume_ValueChanged;
             slr_volume.ValueLabelClick += slr_volume_ValueLabelClick;
@@ -164,7 +164,7 @@ namespace vatACARS
             AutoScaleDimensions = new SizeF(8F, 16F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(38, 38, 38);
-            ClientSize = new Size(305, 401);
+            ClientSize = new Size(331, 401);
             Controls.Add(slr_volume);
             Controls.Add(lbl_volume);
             Controls.Add(lbl_token);
@@ -180,6 +180,8 @@ namespace vatACARS
             Text = "Settings";
             Load += SettingsMenu_Load;
             Shown += SettingsMenu_Shown;
+            LocationChanged += SettingsMenu_LocationChanged;
+            SizeChanged += SettingsMenu_SizeChanged;
             MouseDown += SettingsMenu_MouseDown;
             MouseMove += SettingsMenu_MouseMove;
             MouseUp += SettingsMenu_MouseUp;
@@ -189,8 +191,8 @@ namespace vatACARS
         }
 
         private Panel pnl_control;
-        private Button btnClose;
-        private Button btnMinimize;
+        private System.Windows.Forms.Button btnClose;
+        private System.Windows.Forms.Button btnMinimize;
 
         #endregion // End of Windows Form Designer generated code
 

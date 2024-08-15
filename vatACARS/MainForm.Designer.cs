@@ -1,4 +1,6 @@
-﻿namespace vatACARS
+﻿using vatACARSControls;
+
+namespace vatACARS
 {
     partial class MainForm
     {
@@ -34,6 +36,7 @@
             lbl_title = new Label();
             btnClose = new Button();
             btnMinimize = new Button();
+            btn_connect = new RoundedButton();
             pnl_control.SuspendLayout();
             SuspendLayout();
             // 
@@ -121,12 +124,32 @@
             btnMinimize.UseVisualStyleBackColor = true;
             btnMinimize.Click += btnMinimize_Click;
             // 
+            // btn_connect
+            // 
+            btn_connect.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            btn_connect.BackColor = Color.FromArgb(59, 130, 246);
+            btn_connect.CornerRadius = 8;
+            btn_connect.Cursor = Cursors.Hand;
+            btn_connect.FlatAppearance.BorderColor = Color.FromArgb(9, 9, 9);
+            btn_connect.FlatAppearance.BorderSize = 0;
+            btn_connect.FlatAppearance.MouseDownBackColor = Color.FromArgb(106, 155, 253);
+            btn_connect.FlatAppearance.MouseOverBackColor = Color.FromArgb(106, 155, 253);
+            btn_connect.FlatStyle = FlatStyle.Flat;
+            btn_connect.ForeColor = Color.White;
+            btn_connect.Location = new Point(583, 376);
+            btn_connect.Name = "btn_connect";
+            btn_connect.Size = new Size(101, 34);
+            btn_connect.TabIndex = 4;
+            btn_connect.Text = "CONNECT";
+            btn_connect.UseVisualStyleBackColor = false;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(8F, 16F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(38, 38, 38);
             ClientSize = new Size(696, 422);
+            Controls.Add(btn_connect);
             Controls.Add(pnl_control);
             Font = new Font("Montserrat SemiBold", 9F);
             FormBorderStyle = FormBorderStyle.None;
@@ -137,9 +160,11 @@
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Pilot Client";
             Load += MainForm_Load;
+            LocationChanged += MainForm_LocationChanged;
             MouseDown += MainForm_MouseDown;
             MouseMove += MainForm_MouseMove;
             MouseUp += MainForm_MouseUp;
+            Resize += MainForm_Resize;
             pnl_control.ResumeLayout(false);
             ResumeLayout(false);
         }
@@ -152,5 +177,6 @@
 
         private Label lbl_title;
         private Button btn_settings;
+        private RoundedButton btn_connect;
     }
 }

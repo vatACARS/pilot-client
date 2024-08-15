@@ -249,5 +249,15 @@ namespace vatACARS
                 this.Region = new Region(path);
             }
         }
+
+        private void MainForm_LocationChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void MainForm_Resize(object sender, EventArgs e)
+        {
+
+        }
     }
 }

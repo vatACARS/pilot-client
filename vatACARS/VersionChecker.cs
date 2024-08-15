@@ -48,7 +48,8 @@ namespace vatACARS
                 {
                     logger.Log("Update found, stopping the timer & showing update dialog.");
                     timer.Enabled = false;
-                    //show a dialog to the user (todo)
+                    UpdatePopupForm updatePopup = new UpdatePopupForm();
+                    updatePopup.ShowDialog();
                 }
             }
             logger.Log("Finished.");

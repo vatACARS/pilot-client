@@ -287,5 +287,15 @@ namespace vatACARS
                 Properties.Settings.Default.Save();
             }
         }
+
+        private void SettingsMenu_LocationChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void SettingsMenu_SizeChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }
